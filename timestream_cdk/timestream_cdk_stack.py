@@ -72,9 +72,7 @@ class TimestreamCdkStack(Stack):
                         "logs:PutMetricFilter",
                         "logs:PutRetentionPolicy"
                     ],
-                    resources=[
-                        log_group.log_group_arn,
-                    ]
+                    resources=[f"arn:aws:logs:*:{self.account}:log-group:*:log-stream:*"],
                 )
             ],
         )
