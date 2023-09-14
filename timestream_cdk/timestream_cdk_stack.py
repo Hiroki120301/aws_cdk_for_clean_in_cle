@@ -7,6 +7,7 @@ from aws_cdk import (
     aws_logs as logs,
 )
 
+
 class TimestreamCdkStack(Stack):
     
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
@@ -33,21 +34,6 @@ class TimestreamCdkStack(Stack):
             self, "IoTTimestreamRole", 
             assumed_by=iam.ServicePrincipal('iot.amazonaws.com'),
         )
-
-        # write_records_statement = iam.PolicyStatement(
-        #     effect=iam.Effect.ALLOW,
-        #     actions=["timestream:WriteRecords"],
-        #     resources=[f"arn:aws:timestream:{self.region}:{self.account}:database/{timestream_database.database_name}/table/{timestream_table.table_name}"]
-        # )
-
-        # describe_endpoints_statement = iam.PolicyStatement(
-        #     effect=iam.Effect.ALLOW,
-        #     actions=["timestream:DescribeEndpoints"],
-        #     resources=["*"],
-        # )
-
-        # iot_timestream_role.add_to_policy(write_records_statement)
-        # iot_timestream_role.add_to_policy(describe_endpoints_statement)
 
         timestream_policy = iam.ManagedPolicy(
             self, 
@@ -123,3 +109,4 @@ class TimestreamCdkStack(Stack):
                 sql="SELECT decoded.payload.data.* FROM 'air_quality'",
             )
         )
+
