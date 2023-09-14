@@ -15,7 +15,7 @@ class TimestreamCdkStack(Stack):
         # create timestream database
         timestream_database = timestream.CfnDatabase(
             self, "AirQualityDuplicate",
-            database_name="AirQualityDuplicate",
+            database_name="AirQualityDuplicate", 
         )
 
         # create timesream table with previously created timestream database
