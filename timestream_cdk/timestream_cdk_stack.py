@@ -30,7 +30,7 @@ class TimestreamCdkStack(Stack):
 
         # create iam role for the new timestream database
         iot_timestream_role = iam.Role(
-            self, "IoTTimestreamRole",
+            self, "IoTTimestreamRole", 
             assumed_by=iam.ServicePrincipal('iot.amazonaws.com'),
         )
 
@@ -61,7 +61,7 @@ class TimestreamCdkStack(Stack):
                 log_group.log_group_arn,
             ]
         )
-        iot_timestream_role.add_to_policy(cloud_watch_log_policy)
+        # iot_timestream_role.add_to_policy(cloud_watch_log_policy)
 
         timestream_action = iot.CfnTopicRule.TimestreamActionProperty(
             database_name=timestream_database.database_name,
