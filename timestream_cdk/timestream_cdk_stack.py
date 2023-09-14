@@ -34,34 +34,65 @@ class TimestreamCdkStack(Stack):
             assumed_by=iam.ServicePrincipal('iot.amazonaws.com'),
         )
 
-        timestream_policy = iam.PolicyStatement(
-            actions=[
-                "timestream:WriteRecords",
-                "timestream:ListMeasures",
+        # write_records_statement = iam.PolicyStatement(
+        #     effect=iam.Effect.ALLOW,
+        #     actions=["timestream:WriteRecords"],
+        #     resources=[f"arn:aws:timestream:{self.region}:{self.account}:database/{timestream_database.database_name}/table/{timestream_table.table_name}"]
+        # )
+
+        # describe_endpoints_statement = iam.PolicyStatement(
+        #     effect=iam.Effect.ALLOW,
+        #     actions=["timestream:DescribeEndpoints"],
+        #     resources=["*"],
+        # )
+
+        # iot_timestream_role.add_to_policy(write_records_statement)
+        # iot_timestream_role.add_to_policy(describe_endpoints_statement)
+
+        timestream_policy = iam.ManagedPolicy(
+            self, 
+            "TimestreamPolicy",
+            statements=[
+                iam.PolicyStatement(
+                    effect=iam.Effect.ALLOW,
+                    actions=["timestream:WriteRecords"],
+                    resources=[f"arn:aws:timestream:{self.region}:{self.account}:database/{timestream_database.database_name}/table/{timestream_table.table_name}"],
+                ),
+                iam.PolicyStatement(
+                    effect=iam.Effect.ALLOW,
+                    actions=["timestream:DescribeEndpoints"],
+                    resources=["*"],
+                )
             ],
-            resources=[f"arn:aws:timestream:{self.region}:{self.account}:database/{timestream_database.database_name}/table/{timestream_table.table_name}"]
         )
 
-        iot_timestream_role.add_to_policy(timestream_policy)
+        timestream_policy.attach_to_role(iot_timestream_role)
 
         # create cloud watch log for the new timestream 
         log_group = logs.LogGroup(
             self, "AirQualityLogGroup",
             retention=logs.RetentionDays.ONE_WEEK,
         )
-        cloud_watch_log_policy = iam.PolicyStatement(
-            actions=[
-                "logs:CreateLogStream", 
-                "logs:CreateLogGroup",
-                "logs:PutLogEvents",
-                "logs:PutMetricFilter",
-                "logs:PutRetentionPolicy"
+
+        cloud_watch_log_policy = iam.ManagedPolicy(
+            self,
+            "CloudWatchPolicy",
+            statements=[
+                iam.PolicyStatement(
+                    actions=[
+                        "logs:CreateLogStream", 
+                        "logs:CreateLogGroup",
+                        "logs:PutLogEvents",
+                        "logs:PutMetricFilter",
+                        "logs:PutRetentionPolicy"
+                    ],
+                    resources=[
+                        log_group.log_group_arn,
+                    ]
+                )
             ],
-            resources=[
-                log_group.log_group_arn,
-            ]
         )
-        # iot_timestream_role.add_to_policy(cloud_watch_log_policy)
+        cloud_watch_log_policy.attach_to_role(iot_timestream_role)
 
         timestream_action = iot.CfnTopicRule.TimestreamActionProperty(
             database_name=timestream_database.database_name,
