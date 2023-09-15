@@ -4,8 +4,8 @@ from aws_cdk import (
     aws_timestream as timestream,
     aws_iot as iot,
     aws_iam as iam,
-    aws_logs as logs,
-    CfnParameter
+    CfnParameter,
+    CfnOutput,
 )
 
 
@@ -16,7 +16,9 @@ class TimestreamCdkStack(Stack):
 
         upload_timstream_database_name = CfnParameter(
             self, "databasename", 
-            type="String", description="The name of the Amazon Timestream database where data from sensors will be stored."
+            type="String", 
+            description="The name of the Amazon Timestream database where data from sensors will be stored.",
+            default="AirQualityDuplicate"
         )
 
         # create timestream database
@@ -27,17 +29,21 @@ class TimestreamCdkStack(Stack):
 
         upload_timestream_table_name = CfnParameter(
             self, "tablename",
-            type="String", description="The name of the Amazon Timestream table"
+            type="String", 
+            description="The name of the Amazon Timestream table",
+            default="airQualityDuplicate",
         )
 
         upload_timestream_magnetic_store_retention = CfnParameter(
             self, "magneticretention",
-            type="String", description="The retention period of magnetic storage in days"
+            type="String", description="The retention period of magnetic storage in days",
+            default="36500"
         )
 
         upload_timestream_memory_store_retention = CfnParameter(
             self, "memoryretention",
-            type="String", description="The retention period of memory storage in hours"
+            type="String", description="The retention period of memory storage in hours",
+            default="1"
         )
 
         # create timesream table with previously created timestream database
@@ -115,12 +121,15 @@ class TimestreamCdkStack(Stack):
 
         upload_iot_topic_rule_name = CfnParameter(
             self, "topicrule_name",
-            type="String", description="The name of the topic rule that sends data to Amazon Timestream database"
+            type="String", 
+            description="The name of the topic rule that sends data to Amazon Timestream database",
+            default="IoT2TimestreamReplicate",
         )
 
         upload_iot_topic_rule_sql_statement = CfnParameter(
             self, "sql",
-            type="String", description="The sql statement used for IoT core topic rule."
+            type="String", description="The sql statement used for IoT core topic rule.",
+            default="SELECT decoded.payload.data.* FROM 'air_quality'",
         )
         # create IoT core topic rule for the new timestream db
         iot.CfnTopicRule(
@@ -137,3 +146,16 @@ class TimestreamCdkStack(Stack):
             )
         )
 
+        iot_user = iam.User(self, "IoTUser")
+        iot_user.add_managed_policy(iam.ManagedPolicy.from_aws_managed_policy_name("AWSIoTDataAccess"))
+        iot_user.add_to_policy(iam.PolicyStatement(
+            actions=["iot:Publish", "iot:Connect"],
+            resources=[f"arn:aws:iot:{self.region}:{self.account}:topic/air_quality"]
+        ))
+        access_key = iam.CfnAccessKey(self, "AccessKey",
+            user_name=iot_user.user_name
+        )
+
+        CfnOutput(self, "IAMUserARN", value=iot_user.user_arn)
+        CfnOutput(self, "IAMUserSecretKey", value=access_key.attr_secret_access_key)
+        CfnOutput(self, "IAMUserAccessKey", value=access_key.ref)
