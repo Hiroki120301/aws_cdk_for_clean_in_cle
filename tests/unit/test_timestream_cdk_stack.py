@@ -10,6 +10,23 @@ def test_sqs_queue_created():
     stack = TimestreamCdkStack(app, "timestream-cdk")
     template = assertions.Template.from_stack(stack)
 
-#     template.has_resource_properties("AWS::SQS::Queue", {
-#         "VisibilityTimeout": 300
-#     })
+    template.has_resource(
+        "AWS::Timestream::Database", 
+        {
+            "Properties": {
+                "DatabaseName": "AirQualityDuplicate",
+            }
+        }
+    )
+
+    template.has_resource(
+        "AWS::Timestream::Table",
+        {
+            "Properties": {
+                "DatabaseName": "AirQualityDuplicate",
+                "TableName": "airQualityDuplicate"
+            },
+            "DependsOn": ["AirQualityDuplicate"]
+        }
+    )
+

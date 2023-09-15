@@ -24,6 +24,10 @@ class TimestreamCdkStack(Stack):
             self, "airQualityDuplicate",
             table_name="airQualityDuplicate",
             database_name=timestream_database.database_name,
+            retention_properties=timestream.CfnTable.RetentionPropertiesProperty(
+                magnetic_store_retention_period_in_days="36500",
+                memory_store_retention_period_in_hours="1",
+            )
         )
 
         # add dependency between timestream table and db
