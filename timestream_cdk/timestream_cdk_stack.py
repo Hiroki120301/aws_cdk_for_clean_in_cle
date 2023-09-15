@@ -159,3 +159,5 @@ class TimestreamCdkStack(Stack):
         CfnOutput(self, "IAMUserARN", value=iot_user.user_arn)
         CfnOutput(self, "IAMUserSecretKey", value=access_key.attr_secret_access_key)
         CfnOutput(self, "IAMUserAccessKey", value=access_key.ref)
+
+        

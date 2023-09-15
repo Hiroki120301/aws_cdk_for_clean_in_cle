@@ -1,0 +1,175 @@
+{
+"app_eui": "53796E0000000000",
+"dc": {
+    "balance": 1592539,
+    "nonce": 3
+},
+"decoded": {
+    "payload": {
+    "data": {
+        "batt_mv": 3302,
+        "batt_v": 3.302
+    },
+    "errors": [],
+    "warnings": []
+    },
+    "status": "success"
+},
+"dev_eui": "0004A30B012766C2",
+"devaddr": "E5030048",
+"fcnt": 473,
+"hotspots": [
+    {
+    "channel": 6,
+    "frequency": 905.1,
+    "hold_time": 0,
+    "id": "112PSJv44yPZqgSDtDPcCTKb8djKXGgtes7JSRZiGK9avosTSryp",
+    "lat": 41.503074822991344,
+    "long": -81.6904821687414,
+    "name": "long-ocean-bat",
+    "reported_at": 1694811550395,
+    "rssi": -113.0,
+    "snr": -14.0,
+    "spreading": "SF10BW125",
+    "status": "success"
+    }
+],
+"id": "178e9460-cc81-47bd-b7f6-d430ebe67094",
+"metadata": {
+    "adr_allowed": false,
+    "cf_list_enabled": false,
+    "multi_buy": 1,
+    "organization_id": "70d628cd-fa5d-4db6-87df-71d6e8d080d2",
+    "preferred_hotspots": [],
+    "rx_delay": 1,
+    "rx_delay_actual": 1,
+    "rx_delay_state": "rx_delay_established"
+},
+"name": "Synetica Air",
+"payload": "Qgzm",
+"payload_size": 3,
+"port": 1,
+"raw_packet": "QOUDAEiA2QEB1nE9rX7TdA==",
+"replay": false,
+"reported_at": 1694811550395,
+"type": "uplink",
+"uuid": "4e5f5b30-30a8-4f92-8215-7fa851b60f37"
+}
+
+{
+"app_eui": "53796E0000000000",
+"dc": {
+    "balance": 1592540,
+    "nonce": 3
+},
+"decoded": {
+    "payload": {
+    "data": {
+        "mc_pm10_0": 2.351,
+        "mc_pm2_5": 2.351
+    },
+    "errors": [],
+    "warnings": []
+    },
+    "status": "success"
+},
+"dev_eui": "0004A30B012766C2",
+"devaddr": "E5030048",
+"fcnt": 472,
+"hotspots": [
+    {
+    "channel": 4,
+    "frequency": 904.7,
+    "hold_time": 0,
+    "id": "112Ththn2nrgLAN3Zn7frb4yWxMSPXecKMfMcmiVEyHcwHwrmcmU",
+    "lat": 41.48143242137231,
+    "long": -81.68567655015886,
+    "name": "modern-fern-bobcat",
+    "reported_at": 1694811545915,
+    "rssi": -121.0,
+    "snr": -13.0,
+    "spreading": "SF10BW125",
+    "status": "success"
+    }
+],
+"id": "178e9460-cc81-47bd-b7f6-d430ebe67094",
+"metadata": {
+    "adr_allowed": false,
+    "cf_list_enabled": false,
+    "multi_buy": 1,
+    "organization_id": "70d628cd-fa5d-4db6-87df-71d6e8d080d2",
+    "preferred_hotspots": [],
+    "rx_delay": 1,
+    "rx_delay_actual": 1,
+    "rx_delay_state": "rx_delay_established"
+},
+"name": "Synetica Air",
+"payload": "WEAWcFdaQBZwUQ==",
+"payload_size": 10,
+"port": 1,
+"raw_packet": "QOUDAEiA2AEBlMjYquce5uFtpbw4J70=",
+"replay": false,
+"reported_at": 1694811545915,
+"type": "uplink",
+"uuid": "c03f4999-9156-4c92-a3bc-8df75965e7b8"
+}
+
+{
+"app_eui": "53796E0000000000",
+"dc": {
+    "balance": 1592541,
+    "nonce": 3
+},
+"decoded": {
+    "payload": {
+    "data": {
+        "co2_ppm": 477,
+        "humidity": 37,
+        "temp_c": 28.1,
+        "temp_f": 82.58
+    },
+    "errors": [],
+    "warnings": []
+    },
+    "status": "success"
+},
+"dev_eui": "0004A30B012766C2",
+"devaddr": "E5030048",
+"fcnt": 471,
+"hotspots": [
+    {
+    "channel": 5,
+    "frequency": 904.9,
+    "hold_time": 0,
+    "id": "112Ththn2nrgLAN3Zn7frb4yWxMSPXecKMfMcmiVEyHcwHwrmcmU",
+    "lat": 41.48143242137231,
+    "long": -81.68567655015886,
+    "name": "modern-fern-bobcat",
+    "reported_at": 1694811541428,
+    "rssi": -119.0,
+    "snr": -11.800000190734863,
+    "spreading": "SF10BW125",
+    "status": "success"
+    }
+],
+"id": "178e9460-cc81-47bd-b7f6-d430ebe67094",
+"metadata": {
+    "adr_allowed": false,
+    "cf_list_enabled": false,
+    "multi_buy": 1,
+    "organization_id": "70d628cd-fa5d-4db6-87df-71d6e8d080d2",
+    "preferred_hotspots": [],
+    "rx_delay": 1,
+    "rx_delay_actual": 1,
+    "rx_delay_state": "rx_delay_established"
+},
+"name": "Synetica Air",
+"payload": "AQEZAiUIAd0=",
+"payload_size": 8,
+"port": 1,
+"raw_packet": "QOUDAEiA1wEBgDLWDzY2RAD/Cmiu",
+"replay": false,
+"reported_at": 1694811541428,
+"type": "uplink",
+"uuid": "b86f756e-39a0-442b-a368-be73e37376b5"
+}
