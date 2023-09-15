@@ -5,6 +5,7 @@ from aws_cdk import (
     aws_iot as iot,
     aws_iam as iam,
     aws_logs as logs,
+    CfnParameter
 )
 
 
@@ -13,20 +14,40 @@ class TimestreamCdkStack(Stack):
     def __init__(self, scope: Construct, id: str, **kwargs) -> None:
         super().__init__(scope, id, **kwargs)
 
+        upload_timstream_database_name = CfnParameter(
+            self, "databasename", 
+            type="String", description="The name of the Amazon Timestream database where data from sensors will be stored."
+        )
+
         # create timestream database
         timestream_database = timestream.CfnDatabase(
             self, "AirQualityDuplicate",
-            database_name="AirQualityDuplicate", 
+            database_name=upload_timstream_database_name.value_as_string, 
+        )
+
+        upload_timestream_table_name = CfnParameter(
+            self, "tablename",
+            type="String", description="The name of the Amazon Timestream table"
+        )
+
+        upload_timestream_magnetic_store_retention = CfnParameter(
+            self, "magneticretention",
+            type="String", description="The retention period of magnetic storage in days"
+        )
+
+        upload_timestream_memory_store_retention = CfnParameter(
+            self, "memoryretention",
+            type="String", description="The retention period of memory storage in hours"
         )
 
         # create timesream table with previously created timestream database
         timestream_table = timestream.CfnTable(
             self, "airQualityDuplicate",
-            table_name="airQualityDuplicate",
+            table_name=upload_timestream_table_name.value_as_string,
             database_name=timestream_database.database_name,
             retention_properties=timestream.CfnTable.RetentionPropertiesProperty(
-                magnetic_store_retention_period_in_days="36500",
-                memory_store_retention_period_in_hours="1",
+                magnetic_store_retention_period_in_days=upload_timestream_magnetic_store_retention.value_as_string,
+                memory_store_retention_period_in_hours=upload_timestream_memory_store_retention.value_as_string,
             )
         )
 
@@ -57,12 +78,6 @@ class TimestreamCdkStack(Stack):
         )
 
         timestream_policy.attach_to_role(iot_timestream_role)
-
-        # create cloud watch log for the new timestream 
-        log_group = logs.LogGroup(
-            self, "AirQualityLogGroup",
-            retention=logs.RetentionDays.ONE_WEEK,
-        )
 
         cloud_watch_log_policy = iam.ManagedPolicy(
             self,
@@ -98,17 +113,27 @@ class TimestreamCdkStack(Stack):
             )
         )
 
+        upload_iot_topic_rule_name = CfnParameter(
+            self, "topicrule_name",
+            type="String", description="The name of the topic rule that sends data to Amazon Timestream database"
+        )
+
+        upload_iot_topic_rule_sql_statement = CfnParameter(
+            self, "sql",
+            type="String", description="The sql statement used for IoT core topic rule."
+        )
         # create IoT core topic rule for the new timestream db
         iot.CfnTopicRule(
             self, 
             "IoT2TimestreamReplicate",
-            rule_name="IoT2TimestreamReplicate",
+            rule_name=upload_iot_topic_rule_name.value_as_string,
             topic_rule_payload=iot.CfnTopicRule.TopicRulePayloadProperty(
                 actions=[
                     iot.CfnTopicRule.ActionProperty(
                         timestream=timestream_action,
                     )],
-                sql="SELECT decoded.payload.data.* FROM 'air_quality'",
+                # "SELECT decoded.payload.data.* FROM 'air_quality'"
+                sql=upload_iot_topic_rule_sql_statement.value_as_string,
             )
         )
 
